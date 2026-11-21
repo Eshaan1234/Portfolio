@@ -17,7 +17,6 @@ body {
   background-color: #04070a;
   color: #f1f5f9;
   overflow-x: hidden;
-  selection-background-color: rgb(var(--accent-rgb) / 0.25);
 }
 
 ::selection {

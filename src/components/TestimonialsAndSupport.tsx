@@ -36,7 +36,7 @@ export default function TestimonialsAndSupport() {
             <div className="flex items-center justify-between gap-4 mb-6">
               <div>
                 <div className="font-mono text-xs uppercase tracking-widest text-accent mb-1">
-                  // Project Spotlights &amp; Reviews
+                  {"// Project Spotlights & Reviews"}
                 </div>
                 <h2 className="font-display text-2xl sm:text-3xl font-bold text-white">
                   What Makes My Builds Stand Out

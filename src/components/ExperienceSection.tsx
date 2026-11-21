@@ -7,6 +7,7 @@ import { SmartChipSvg } from "./BrandIcons";
 
 export default function ExperienceSection() {
   const trackRef = useRef<HTMLDivElement | null>(null);
+  const dragState = useRef({ active: false, startX: 0, scrollLeft: 0 });
 
   const scrollTrack = (direction: "left" | "right") => {
     const el = trackRef.current;
@@ -15,13 +16,36 @@ export default function ExperienceSection() {
     el.scrollBy({ left: offset, behavior: "smooth" });
   };
 
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = trackRef.current;
+    if (!el) return;
+    dragState.current = {
+      active: true,
+      startX: e.pageX - el.offsetLeft,
+      scrollLeft: el.scrollLeft,
+    };
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = trackRef.current;
+    if (!el || !dragState.current.active) return;
+    e.preventDefault();
+    const x = e.pageX - el.offsetLeft;
+    const walk = (x - dragState.current.startX) * 1.4;
+    el.scrollLeft = dragState.current.scrollLeft - walk;
+  };
+
+  const stopDragging = () => {
+    dragState.current.active = false;
+  };
+
   return (
     <section id="journey" className="py-20 sm:py-24 px-4 sm:px-6 overflow-hidden">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
           <div>
             <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-accent mb-2">
-              <span>// Experience &amp; Education</span>
+              <span>{"// Experience & Education"}</span>
             </div>
             <h2 className="font-display text-3xl sm:text-4xl font-bold text-white">
               Developer Smart-Pass Journey
@@ -58,8 +82,12 @@ export default function ExperienceSection() {
         {/* Horizontal Smart-Chip Pass Track */}
         <div
           ref={trackRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={stopDragging}
+          onMouseLeave={stopDragging}
           data-cursor="SCROLL ↔"
-          className="flex gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-4"
+          className="flex gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-4 select-none"
         >
           {EXPERIENCE.map((card, idx) => (
             <article

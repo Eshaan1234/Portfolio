@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Menu, X, Sparkles, Palette, MessageSquare } from "lucide-react";
 import { PROFILE, THEME_PRESETS, type ThemePreset } from "@/data/portfolio";
 import { WhatsAppIcon, GitHubIcon } from "./BrandIcons";
@@ -31,6 +31,30 @@ export default function Navbar({
 }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const paletteRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handlePointerDown = (e: MouseEvent) => {
+      if (
+        paletteRef.current &&
+        !paletteRef.current.contains(e.target as Node)
+      ) {
+        setPaletteOpen(false);
+      }
+    };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setPaletteOpen(false);
+        setMobileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handlePointerDown);
+    window.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
 
   return (
     <header className="fixed top-0 inset-x-0 z-50 px-3 sm:px-6 pt-3 sm:pt-4 pointer-events-none">
@@ -77,7 +101,7 @@ export default function Navbar({
           {/* Right Controls: Theme Switcher, Cursor FX, GitHub, WhatsApp & Let's Talk */}
           <div className="flex items-center gap-1.5 sm:gap-2">
             {/* Accent Theme Switcher */}
-            <div className="relative">
+            <div ref={paletteRef} className="relative">
               <button
                 type="button"
                 onClick={() => setPaletteOpen((v) => !v)}

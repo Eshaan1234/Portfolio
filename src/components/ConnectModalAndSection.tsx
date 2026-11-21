@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowUpRight,
@@ -185,7 +185,7 @@ export function ConnectSection() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-accent mb-2">
-            <span>// Let&apos;s Connect</span>
+            <span>{"// Let's Connect"}</span>
           </div>
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-white">
             WhatsApp, GitHub &amp; Social Command Hub
@@ -262,6 +262,20 @@ export function ConnectModal({
   open: boolean;
   onClose: () => void;
 }) {
+  useEffect(() => {
+    if (!open) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", handleKey);
+    };
+  }, [open, onClose]);
+
   return (
     <AnimatePresence>
       {open && (

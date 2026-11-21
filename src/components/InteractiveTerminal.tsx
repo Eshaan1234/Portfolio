@@ -308,7 +308,12 @@ export default function InteractiveTerminal({
         {/* Terminal Window Chrome */}
         <div
           data-cursor="TYPE >_"
-          onClick={() => inputRef.current?.focus()}
+          onClick={(e) => {
+            const target = e.target as HTMLElement | null;
+            if (target?.closest("a, button")) return;
+            if (window.getSelection()?.toString()) return;
+            inputRef.current?.focus();
+          }}
           className="rounded-2xl overflow-hidden bg-[#060b0f] border border-white/15 shadow-[0_24px_80px_rgba(0,0,0,0.7)]"
         >
           {/* Titlebar */}
